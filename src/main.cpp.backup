@@ -1,0 +1,51 @@
+
+#include <Arduino.h>
+// E-Health Shield Custom Libraries 
+#include <eHealth.h>
+//#include <eHealthDisplay.h>
+#include <PinChangeInt.h>
+//#include <PinChangeIntConfig.h>
+
+int cont = 0;
+void readPulsioximeter()
+{
+
+  cont ++;
+
+  if (cont == 50) { //Get only of one 50 measures to reduce the latency
+    eHealth.readPulsioximeter();
+    cont = 0;
+  }
+}
+void setupPulse()
+{
+  Serial.begin(115200);
+  eHealth.initPulsioximeter();
+
+  //Attach the inttruptions for using the pulsioximeter.
+  PCintPort::attachInterrupt(6, readPulsioximeter, RISING);
+}
+void testPulse()
+{
+  Serial.print("PRbpm : ");
+  Serial.print(eHealth.getBPM());
+
+  Serial.print("    %SPo2 : ");
+  Serial.print(eHealth.getOxygenSaturation());
+
+  Serial.print("\n");
+  Serial.println("=============================");
+  delay(500);
+}
+
+// to do on Ubuntu so that Platformio can compile
+//sudo chmod a+rw /dev/ttyUSB0
+void setup() 
+{
+  setupPulse();
+}
+
+void loop() 
+{
+  testPulse();
+}
