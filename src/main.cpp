@@ -11,7 +11,7 @@ void setup() {
 }
 
 void loop() {
-
+  // just testing the synchro of the project 
   Serial.print("Current position : ");
   uint8_t position = eHealth.getBodyPosition();
   eHealth.printPosition(position);
