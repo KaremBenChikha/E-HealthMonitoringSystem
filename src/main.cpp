@@ -1,22 +1,91 @@
-//sudo chmod a+rw /dev/ttyACM0
-
-#include<Arduino.h>
+//libraries
+#include <Arduino.h>
 #include <eHealth.h>
+#include <PinChangeInt.h>
 
+//Global Variables
+int contSPO2 = 0;
+float temperature;
+float Bmp;
+float OxygenSaturation;
+float ECG;
 
-void setup() {
+//INIT Functions
+void readPulsioximeter()
+{
 
-  Serial.begin(9600);
-  eHealth.initPositionSensor();
+  contSPO2 ++;
+
+  if (contSPO2 == 50) { //Get only of one 50 measures to reduce the latency
+    eHealth.readPulsioximeter();
+    contSPO2 = 0;
+  }
 }
 
-void loop() {
-  // just testing the synchro of the project 
-  Serial.print("Current position : ");
-  uint8_t position = eHealth.getBodyPosition();
-  eHealth.printPosition(position);
-//serial Print
- 
-  Serial.print("\n");
-  delay(1000); //	wait for a second.
+void InitPulsiometer()
+{
+  eHealth.initPulsioximeter();
+  PCintPort::attachInterrupt(6, readPulsioximeter, RISING);
+
+}
+
+//Read Functions
+
+void ReadECG()
+{
+  ECG = eHealth.getECG();
+}
+
+void ReadTemperature()
+{
+  temperature = eHealth.getTemperature();
+}
+
+void ReadPulse()
+{
+  Bmp = eHealth.getBPM();
+  OxygenSaturation = eHealth.getOxygenSaturation()*10;
+}
+
+//Print Functions
+
+void PrintTemperature()
+{
+  Serial.print(temperature,2);
+  Serial.print(",");
+}
+
+void PrintPulse()
+{
+  Serial.print(Bmp);
+  Serial.print(",");
+  Serial.print(OxygenSaturation,2);
+  Serial.print(",");
+}
+
+void PrintECG()
+{
+  Serial.print(ECG, 2);
+}
+
+//Setup
+
+void setup() 
+{
+  Serial.begin(9600);
+  InitPulsiometer();
+}
+
+//Loop
+
+void loop() 
+{
+  ReadTemperature();
+  PrintTemperature();
+  ReadPulse();
+  PrintPulse();
+  ReadECG();
+  PrintECG();
+  Serial.println();
+  delay(2000);
 }

@@ -1,51 +1,92 @@
-
+//libraries
 #include <Arduino.h>
-// E-Health Shield Custom Libraries 
 #include <eHealth.h>
-//#include <eHealthDisplay.h>
 #include <PinChangeInt.h>
-//#include <PinChangeIntConfig.h>
 
-int cont = 0;
+//Global Variables
+int contSPO2 = 0;
+float temperature;
+float Bmp;
+float OxygenSaturation;
+float ECG;
+
+//INIT Functions
 void readPulsioximeter()
 {
 
-  cont ++;
+  contSPO2 ++;
 
-  if (cont == 50) { //Get only of one 50 measures to reduce the latency
+  if (contSPO2 == 50) { //Get only of one 50 measures to reduce the latency
     eHealth.readPulsioximeter();
-    cont = 0;
+    contSPO2 = 0;
   }
 }
-void setupPulse()
+
+void InitPulsiometer()
 {
-  Serial.begin(115200);
   eHealth.initPulsioximeter();
-
-  //Attach the inttruptions for using the pulsioximeter.
   PCintPort::attachInterrupt(6, readPulsioximeter, RISING);
+
 }
-void testPulse()
+
+//Read Functions
+
+void ReadECG()
 {
-  Serial.print("PRbpm : ");
-  Serial.print(eHealth.getBPM());
-
-  Serial.print("    %SPo2 : ");
-  Serial.print(eHealth.getOxygenSaturation());
-
-  Serial.print("\n");
-  Serial.println("=============================");
-  delay(500);
+  ECG = eHealth.getECG();
 }
 
-// to do on Ubuntu so that Platformio can compile
-//sudo chmod a+rw /dev/ttyUSB0
+void ReadTemperature()
+{
+  temperature = eHealth.getTemperature();
+}
+
+void ReadPulse()
+{
+  Bmp = eHealth.getBPM();
+  OxygenSaturation = eHealth.getOxygenSaturation()*10;
+}
+
+//Print Functions
+
+void PrintTemperature()
+{
+  Serial.print("Temperature (ºC):   ");
+  Serial.print(temperature,2);
+}
+
+void PrintPulse()
+{
+  Serial.print("    PRbpm : ");
+  Serial.print(Bmp);
+  Serial.print("    %SPo2 : ");
+  Serial.print(OxygenSaturation,2);
+}
+
+void PrintECG()
+{
+  Serial.print("    ECG value :  ");
+  Serial.print(ECG, 2);
+}
+
+//Setup
+
 void setup() 
 {
-  setupPulse();
+  Serial.begin(9600);
+  InitPulsiometer();
 }
+
+//Loop
 
 void loop() 
 {
-  testPulse();
+  ReadTemperature();
+  PrintTemperature();
+  ReadPulse();
+  PrintPulse();
+  ReadECG();
+  PrintECG();
+  Serial.println();
+  delay(2000);
 }
