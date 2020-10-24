@@ -65,3 +65,9 @@ with open(csvfile, 'w+') as f:
     write = csv.writer(f) 
     write.writerow(Fields) 
     write.writerows(Rows) 
+
+#things to be added: 
+# auto detect arduino port
+# transpose data in csv file 
+# add publishers to Adafruit
+
