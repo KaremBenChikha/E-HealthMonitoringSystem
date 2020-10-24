@@ -2,6 +2,7 @@
 import serial
 import time
 import csv
+from itertools import zip_longest
 from Adafruit_IO import Client, Feed
 
 #import matplotlib.pyplot as plt
@@ -59,12 +60,13 @@ Arduino.close()
 Fields = ['Temperature','BMP','SPO2','ECG']  
 
 Rows = [TemperatureData,BMPData,OData,ECGData]
+Rows = zip_longest(*Rows, fillvalue = '')
+
+#Write to CSV
 with open(csvfile, 'w+') as f: 
-      
-    # using csv.writer method from CSV package 
     write = csv.writer(f) 
     write.writerow(Fields) 
-    write.writerows(Rows) 
+    write.writerows(Rows)
 
 #things to be added: 
 # auto detect arduino port
