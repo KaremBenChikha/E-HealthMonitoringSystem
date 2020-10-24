@@ -6,6 +6,7 @@ from itertools import zip_longest
 from Adafruit_IO import Client, Feed
 
 #import matplotlib.pyplot as plt
+#install matplotlib
 
 #Variables
 COM = 'COM5'
@@ -27,10 +28,10 @@ Arduino = serial.Serial(COM,Baud)
 print(Arduino.readline())
 
 # empty list to store the data
-TemperatureData =[]  
-BMPData =[]
-OData =[]
-ECGData =[]
+TemperatureData = []  
+BMPData = []
+OData = []
+ECGData = []
 
 for i in range(10):
     serialLine = Arduino.readline()         # read a byte string
