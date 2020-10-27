@@ -4,6 +4,7 @@ import time
 import csv
 from itertools import zip_longest
 from Adafruit_IO import Client, Feed
+#test test test 
 
 #import matplotlib.pyplot as plt
 #install matplotlib
@@ -71,6 +72,5 @@ with open(csvfile, 'w+') as f:
 
 #things to be added: 
 # auto detect arduino port
-# transpose data in csv file 
 # add publishers to Adafruit
 
