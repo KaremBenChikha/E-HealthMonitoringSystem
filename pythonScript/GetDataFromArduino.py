@@ -10,14 +10,17 @@ from Adafruit_IO import Client, Feed
 #install matplotlib
 
 #Variables
-COM = 'COM5'
+# com 5 for karem and com 9 for hoss
+#COM = 'COM5'
+
+COM = 'COM9'
 Baud = 9600
 csvfile = "test.csv"
 
 #Adafruit Credentials
 #make account for ehealth
-ADAFRUIT_IO_KEY = 'd0409e34637c432caa20aee2bdf2801b'
-ADAFRUIT_IO_USERNAME = 'Karem'
+ADAFRUIT_IO_KEY = 'aio_jLoi81lAoxSJQe836rX304NA94SI'
+ADAFRUIT_IO_USERNAME = 'DigiHealth'
 
 #connect to Adafruit IO
 aio = Client(ADAFRUIT_IO_USERNAME, ADAFRUIT_IO_KEY)
@@ -34,7 +37,7 @@ BMPData = []
 OData = []
 ECGData = []
 
-for i in range(10):
+for i in range(1100000):
     serialLine = Arduino.readline()         # read a byte string
     serialLine = serialLine.decode()  # decode byte string into Unicode  
     serialLine = serialLine.rstrip() # remove \n and \r
