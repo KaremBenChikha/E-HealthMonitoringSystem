@@ -19,7 +19,7 @@ csvfile = "test.csv"
 
 #Adafruit Credentials
 #make account for ehealth
-ADAFRUIT_IO_KEY = 'aio_jLoi81lAoxSJQe836rX304NA94SI'
+ADAFRUIT_IO_KEY = 'aio_xfkZ266E9Tzd2U1xM28DleUNaWbE'
 ADAFRUIT_IO_USERNAME = 'DigiHealth'
 
 #connect to Adafruit IO
@@ -37,10 +37,10 @@ BMPData = []
 OData = []
 ECGData = []
 
-for i in range(1100000):
+for i in range(10000):
     serialLine = Arduino.readline()         # read a byte string
-    serialLine = serialLine.decode()  # decode byte string into Unicode  
-    serialLine = serialLine.rstrip() # remove \n and \r
+    serialLine = serialLine.decode()        # decode byte string into Unicode  
+    serialLine = serialLine.rstrip()        # remove \n and \r
     multiData = serialLine.split(',')
 
     Temperature = float(multiData[0])
@@ -49,16 +49,23 @@ for i in range(1100000):
     ECG = float(multiData[3])
 
     print("BMP: ",BMP)
+    BMPFeed = aio.feeds('bmp')
+    aio.send(BMPFeed.key, str(BMP))
     BMPData.append(BMP)   # add to the end of data list
-    print("O2: ",O)
-    OData.append(O)
-    print("ECG: ",ECG)
-    ECGData.append(ECG)
+    
+    # print("O2: ",O)
+    # O2Feed = aio.feeds('o2')
+    # aio.send(O2Feed.key, str(O))
+    # OData.append(O)
+    #print("ECG: ",ECG)
+    #ECGData.append(ECG)
     print("Temperatue: ",Temperature)
     temperatureFeed = aio.feeds('temperatureio')
     aio.send(temperatureFeed.key, str(Temperature))
     TemperatureData.append(Temperature)
-    time.sleep(0.1)             # wait (sleep) 0.1 seconds
+
+
+    time.sleep(0.4)             # wait (sleep) 0.1 seconds
 
 Arduino.close()
 
